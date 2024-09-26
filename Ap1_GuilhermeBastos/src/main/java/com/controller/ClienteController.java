@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ClienteController {
 
         for (Cliente cliente : Clientes) {
             if (cliente.getId() == id) {
-                response = usuario;
+                response = cliente;
                 break;
             }
         }
@@ -41,5 +42,32 @@ public class ClienteController {
         Clientes.add(Cliente);
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);   
 
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Cliente> updateCliente(@PathVariable("id") int id, @RequestBody Cliente novosDadosCliente) {
+        Cliente clienteASerAtualizado = null;
+
+        for (Cliente cliente : Clientes) {
+            if (cliente.getId() == id) {
+                clienteASerAtualizado = cliente;
+                break;
+            }
+        }
+
+        if (clienteASerAtualizado == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Clientes.remove(clienteASerAtualizado);
+
+        clienteASerAtualizado.setNome(novosDadosCliente.getNome());
+        clienteASerAtualizado.setEmail(novosDadosCliente.getEmail());
+        clienteASerAtualizado.setCpf(novosDadosCliente.getCpf());
+        clienteASerAtualizado.setDataNascimento(novosDadosCliente.getDataNascimento());
+        clienteASerAtualizado.setTelefone(novosDadosCliente.getTelefone());
+
+        Clientes.add(clienteASerAtualizado);
+
+        return new ResponseEntity<>(clienteASerAtualizado, HttpStatus.OK);
     }
 }
