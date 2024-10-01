@@ -10,7 +10,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+
 import lombok.Data;
 import java.util.List;
 
@@ -42,9 +45,10 @@ public class Cliente {
     @Column
     @NotNull(message = "Campo Data de Nascimento é obrigatório.")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDateTime dataNascimento;
+    private LocalDate dataNascimento;
 
     @Column
+    @Pattern(regexp = "\\d{5}\\-\\d{4}", message = "O CEP deve estar no formato XXXXX-XXX")
     private String telefone;
 
     @OneToMany(mappedBy = "cliente")
@@ -53,5 +57,9 @@ public class Cliente {
     public void associarEndereco(Endereco endereco) {
         this.enderecos.add(endereco);
     }
+
+     public boolean isMaiorDeIdade() {
+        return Period.between(dataNascimento, LocalDate.now()).getYears() >= 18;
+     }
 
 }

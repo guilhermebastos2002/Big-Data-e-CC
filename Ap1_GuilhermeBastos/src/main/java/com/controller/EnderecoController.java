@@ -2,11 +2,14 @@ package com.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.model.Cliente;
 import com.model.Endereco;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +25,24 @@ public class EnderecoController {
     public ResponseEntity<Endereco> saveEndereco(@RequestBody Endereco endereco) throws Exception {
         Enderecos.add(endereco);
         return new ResponseEntity<>(endereco, HttpStatus.CREATED);
+    }
+
+     @GetMapping("{id}")
+    public ResponseEntity<Endereco> getEnderecoById(@PathVariable("id") int id) {
+        Endereco response = null;
+
+        for (Endereco endereco : Enderecos) {
+            if (endereco.getId() == id) {
+                response = endereco;
+                break;
+            }
+        }
+
+        if (response == null) 
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+        
     }
 
     @PutMapping("{id}")
@@ -53,16 +74,26 @@ public class EnderecoController {
 
 
     }
+
      @DeleteMapping("{id}")
     public ResponseEntity<Endereco> deleteEndereco(@PathVariable("id") int id) {
-        Endereco endereco = null;
+        Endereco enderecoASerDeletado = null;
 
-        if (endereco.getId() == null)
+        for (Endereco endereco : Enderecos) {
+            if (endereco.getId() == id) {
+                enderecoASerDeletado = endereco;
+                break;
+            }
+        }
+
+        if (enderecoASerDeletado == null) 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         
-        endereco.deleteTodo(id);
+        Enderecos.remove(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+    
     }
 }
+
