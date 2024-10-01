@@ -38,8 +38,8 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente clientes) {
-        Clientes.add(Cliente);
+    public ResponseEntity<Cliente> saveCliente(@RequestBody Cliente cliente) throws Exception {
+        Clientes.add(cliente);
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);   
 
     }

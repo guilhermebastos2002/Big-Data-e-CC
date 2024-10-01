@@ -11,7 +11,7 @@ import lombok.Data;
 public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private int id;
 
     @Column
     @NotBlank(message = "Campo Rua é obrigatório.")
@@ -36,4 +36,9 @@ public class Endereco {
     @Column
     @NotBlank(message = "Campo cep é obrigatório.")
     private String cep;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+    
 }
