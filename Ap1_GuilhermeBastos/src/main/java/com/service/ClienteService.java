@@ -14,6 +14,10 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    public Cliente salvar(Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
     @Transactional
     public Cliente salvarCliente(Cliente cliente) throws Exception {
         // Validações
