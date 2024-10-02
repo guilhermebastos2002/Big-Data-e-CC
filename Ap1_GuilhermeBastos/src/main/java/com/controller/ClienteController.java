@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/Cliente")
@@ -29,28 +30,24 @@ public class ClienteController {
     private static List<Cliente> Clientes = new ArrayList<>();
 
     @GetMapping("{id}")
-    public ResponseEntity<Cliente> getClienteById(@PathVariable("id") int id) {
-        Cliente response = null;
-
-        for (Cliente cliente : Clientes) {
-            if (cliente.getId() == id) {
-                response = cliente;
-                break;
-            }
-        }
-
-        if (response == null) 
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-        
+public ResponseEntity<Cliente> getClienteById(@PathVariable("id") int id) {
+    Optional<Cliente> cliente = clienteService.findById(id);  // Usar o serviço para buscar do banco
+    if (cliente.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    return new ResponseEntity<>(cliente.get(), HttpStatus.OK);
+}
 
-     @PostMapping
-    public ResponseEntity<Cliente> saveCliente(@RequestBody @Valid Cliente cliente) {
-        Cliente novoCliente = clienteService.salvar(cliente);
-        return new ResponseEntity<>(novoCliente, HttpStatus.CREATED);   
-    }
+
+@PostMapping
+public ResponseEntity<Cliente> saveCliente(@RequestBody @Valid Cliente cliente) {
+    Cliente novoCliente = clienteService.salvar(cliente);
+
+    System.out.println("Cliente salvo: " + novoCliente);
+
+    return new ResponseEntity<>(novoCliente, HttpStatus.CREATED);   
+}
+
 
     @PutMapping("{id}")
     public ResponseEntity<Cliente> updateCliente(@PathVariable("id") int id, @RequestBody Cliente novosDadosCliente) {

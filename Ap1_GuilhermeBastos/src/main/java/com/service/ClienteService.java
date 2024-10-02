@@ -6,21 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
-    
+
     public Cliente salvar(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
 
     @Transactional
     public Cliente salvarCliente(Cliente cliente) throws Exception {
-        // Validações
         if (clienteRepository.findByEmail(cliente.getEmail()).isPresent()) {
             throw new RuntimeException("Email já está em uso.");
         }
@@ -34,5 +33,9 @@ public class ClienteService {
         }
 
         return clienteRepository.save(cliente);
+    }
+
+    public Optional<Cliente> findById(int id) {
+        return clienteRepository.findById(id);
     }
 }
